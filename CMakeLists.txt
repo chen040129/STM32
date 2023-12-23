@@ -63,11 +63,13 @@ include_directories(Core/Inc
         generated
         custom
         lv_lib_100ask
+        FATFS
+        Middlewares
 )
 
 add_definitions(-DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx)
 
-file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*" "Source/*.*" "Source/include/*.*" "Source/portable/GCC/ARM_CM4F/*.*" "lvgl/*.*" "lvgl/porting/*.*" "music/*.*" "custom/*.*" "generated/*.*" "lv_lib_100ask/*.*")
+file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*" "Source/*.*" "Source/include/*.*" "Source/portable/GCC/ARM_CM4F/*.*" "lvgl/*.*" "lvgl/porting/*.*" "music/*.*" "custom/*.*" "generated/*.*" "lv_lib_100ask/*.*" "FATFS/*.*" "Middlewares/*.*")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32F407ZGTX_FLASH.ld)
 

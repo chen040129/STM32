@@ -20,7 +20,9 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "./App/fatfs.h"
 #include "rng.h"
+#include "sdio.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -39,6 +41,7 @@
 #include "events_init.h"
 #include "src/lv_100ask_pinyin_ime/lv_100ask_pinyin_ime.h"
 #include "widgets_init.h"
+#include "Third_Party/FatFs/src/ff.h"
 
 /* USER CODE END Includes */
 
@@ -73,7 +76,14 @@ float ADC1_NUM[1024];
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
+FATFS fs;                       /* FatFs 文件系统对象 */
+FIL file;                       /* 文件对象 */
+FRESULT f_res;                  /* 文件操作结果 */
+uint16_t fnum;                      /* 文件成功读写数量 */
+BYTE ReadBuffer[1024] = {0};    /* 读缓冲区 */
+BYTE WriteBuffer[] =            /* 写缓冲区 */
+        "hello word\r\n";
+uint16_t file_memory=0;
 /* USER CODE END 0 */
 
 /**
@@ -110,6 +120,8 @@ int main(void)
   MX_TIM2_Init();
   MX_RNG_Init();
   MX_USART1_Init();
+  MX_SDIO_SD_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
     HAL_TIM_Base_Start_IT(&htim3);
     HAL_TIM_Base_Start_IT(&htim2);
@@ -118,10 +130,58 @@ int main(void)
     lcd_init();//屏幕初始化
     lcd_display_dir(1);//将屏幕设置为横屏
     tp_dev.init();//触屏初始化
-    lv_init();//lvgl初始化
-    lv_port_disp_init();//lvgl接口初始化
-    lv_port_indev_init();//lvgl触摸初始化
 
+/*    lv_init();//lvgl初始化
+    lv_port_disp_init();//lvgl接口初始化
+    lv_port_indev_init();//lvgl触摸初始化*/
+
+    HAL_SD_CardInfoTypeDef sd_info;
+    HAL_StatusTypeDef sd_state= HAL_SD_GetCardInfo(&hsd,&sd_info);
+    HAL_SD_CardCIDTypeDef SD_CID;
+    HAL_SD_GetCardCID(&hsd,&SD_CID);
+
+    while(sd_state!=HAL_OK){
+        lcd_show_string(10,10,200,40,32,"SD Get info Failed",RED);
+        sd_state= HAL_SD_GetCardInfo(&hsd,&sd_info);
+    }
+    uint64_t cardcap=(uint64_t)(sd_info.LogBlockNbr)*(uint64_t)(sd_info.LogBlockSize)/1024/1024;
+
+    int y=10;
+    uint32_t m=10;
+    lcd_show_num(200,y,sd_info.Class,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.Class:",RED);
+    lcd_show_num(200,y+=30,sd_info.BlockNbr,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.BlockNbr:",RED);
+    lcd_show_num(200,y+=30,sd_info.BlockSize,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.BlockSize:",RED);
+    lcd_show_num(200,y+=30,sd_info.CardType,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.CardType:",RED);
+    lcd_show_num(200,y+=30,sd_info.CardVersion,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.CardVersion:",RED);
+    lcd_show_num(200,y+=30,sd_info.LogBlockNbr,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.LogBlockNbr:",RED);
+    lcd_show_num(200,y+=30,sd_info.LogBlockSize,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.LogBlockSize:",RED);
+    lcd_show_num(200,y+=30,sd_info.RelCardAdd,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.RelCardAdd:",RED);
+
+    lcd_show_num(200,y+=30,cardcap,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"cardcap:",RED);
+    lcd_show_string(250,y,200,40,16,"MB",RED);
+
+    lcd_show_num(200,y+=30,SD_CID.ManufacturerID,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"SD_CID.ManufacturerID", RED);
+
+    lcd_show_num(200,y+=30,SD_CID.CID_CRC,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"SD_CID.CRC", RED);
+
+    lcd_show_num(200,y+=30,SD_CID.ManufactDate,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"SD_CID.ManufactDate", RED);
+    f_res = f_mount(&fs, "0:", 1);
+    if(f_res == FR_OK)
+    {
+        lcd_show_string(500,0,200,40,16,"ok", RED);
+    }
   /* USER CODE END 2 */
 
   /* Infinite loop */

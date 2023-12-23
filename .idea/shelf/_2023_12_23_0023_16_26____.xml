@@ -1,0 +1,19 @@
+<changelist name="在进行签出之前于_2023_12_23_0023_16_26_取消提交了更改_[更改]" date="1703320009085" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/在进行签出之前于_2023_12_23_0023_16_26_取消提交了更改_[更改]/shelved.patch" />
+  <option name="DESCRIPTION" value="在进行签出之前于 2023/12/23 0023 16:26 取消提交了更改 [更改]" />
+  <binary>
+    <option name="BEFORE_PATH" value="cmake-build-debug/CMakeFiles/3.26.4/CMakeDetermineCompilerABI_CXX.bin" />
+    <option name="AFTER_PATH" value="cmake-build-debug/CMakeFiles/3.26.4/CMakeDetermineCompilerABI_CXX.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行签出之前于_2023_12_23_0023_16_26_取消提交了更改_[更改]/CMakeDetermineCompilerABI_CXX.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="cmake-build-debug/CMakeFiles/3.26.4/CMakeDetermineCompilerABI_C.bin" />
+    <option name="AFTER_PATH" value="cmake-build-debug/CMakeFiles/3.26.4/CMakeDetermineCompilerABI_C.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行签出之前于_2023_12_23_0023_16_26_取消提交了更改_[更改]/CMakeDetermineCompilerABI_C.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="cmake-build-debug/.ninja_deps" />
+    <option name="AFTER_PATH" value="cmake-build-debug/.ninja_deps" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行签出之前于_2023_12_23_0023_16_26_取消提交了更改_[更改]/.ninja_deps" />
+  </binary>
+</changelist>
