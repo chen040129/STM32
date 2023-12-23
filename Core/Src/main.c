@@ -64,7 +64,7 @@ lv_ui guider_ui;
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+void SD_INFO_SHOW(void);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -135,48 +135,9 @@ int main(void)
     lv_port_disp_init();//lvgl接口初始化
     lv_port_indev_init();//lvgl触摸初始化*/
 
-    HAL_SD_CardInfoTypeDef sd_info;
-    HAL_StatusTypeDef sd_state= HAL_SD_GetCardInfo(&hsd,&sd_info);
-    HAL_SD_CardCIDTypeDef SD_CID;
-    HAL_SD_GetCardCID(&hsd,&SD_CID);
+    SD_INFO_SHOW();
 
-    while(sd_state!=HAL_OK){
-        lcd_show_string(10,10,200,40,32,"SD Get info Failed",RED);
-        sd_state= HAL_SD_GetCardInfo(&hsd,&sd_info);
-    }
-    uint64_t cardcap=(uint64_t)(sd_info.LogBlockNbr)*(uint64_t)(sd_info.LogBlockSize)/1024/1024;
 
-    int y=10;
-    uint32_t m=10;
-    lcd_show_num(200,y,sd_info.Class,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"sd_info.Class:",RED);
-    lcd_show_num(200,y+=30,sd_info.BlockNbr,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"sd_info.BlockNbr:",RED);
-    lcd_show_num(200,y+=30,sd_info.BlockSize,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"sd_info.BlockSize:",RED);
-    lcd_show_num(200,y+=30,sd_info.CardType,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"sd_info.CardType:",RED);
-    lcd_show_num(200,y+=30,sd_info.CardVersion,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"sd_info.CardVersion:",RED);
-    lcd_show_num(200,y+=30,sd_info.LogBlockNbr,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"sd_info.LogBlockNbr:",RED);
-    lcd_show_num(200,y+=30,sd_info.LogBlockSize,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"sd_info.LogBlockSize:",RED);
-    lcd_show_num(200,y+=30,sd_info.RelCardAdd,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"sd_info.RelCardAdd:",RED);
-
-    lcd_show_num(200,y+=30,cardcap,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"cardcap:",RED);
-    lcd_show_string(250,y,200,40,16,"MB",RED);
-
-    lcd_show_num(200,y+=30,SD_CID.ManufacturerID,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"SD_CID.ManufacturerID", RED);
-
-    lcd_show_num(200,y+=30,SD_CID.CID_CRC,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"SD_CID.CRC", RED);
-
-    lcd_show_num(200,y+=30,SD_CID.ManufactDate,5,16,RED);
-    lcd_show_string(10,y,200,40,16,"SD_CID.ManufactDate", RED);
     f_res = f_mount(&fs, "0:", 1);
     if(f_res == FR_OK)
     {
@@ -240,8 +201,50 @@ void SystemClock_Config(void)
   }
 }
 
-/* USER CODE BEGIN 4 */
+void SD_INFO_SHOW(void) {
+    HAL_SD_CardInfoTypeDef sd_info;
+    HAL_StatusTypeDef sd_state= HAL_SD_GetCardInfo(&hsd,&sd_info);
+    HAL_SD_CardCIDTypeDef SD_CID;
+    HAL_SD_GetCardCID(&hsd,&SD_CID);
 
+    while(sd_state!=HAL_OK){
+        lcd_show_string(10,10,200,40,32,"SD Get info Failed",RED);
+        sd_state= HAL_SD_GetCardInfo(&hsd,&sd_info);
+    }
+    uint64_t cardcap=(uint64_t)(sd_info.LogBlockNbr)*(uint64_t)(sd_info.LogBlockSize)/1024/1024;
+    int y=10;
+    lcd_show_num(200,y,sd_info.Class,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.Class:",RED);
+    lcd_show_num(200,y+=30,sd_info.BlockNbr,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.BlockNbr:",RED);
+    lcd_show_num(200,y+=30,sd_info.BlockSize,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.BlockSize:",RED);
+    lcd_show_num(200,y+=30,sd_info.CardType,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.CardType:",RED);
+    lcd_show_num(200,y+=30,sd_info.CardVersion,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.CardVersion:",RED);
+    lcd_show_num(200,y+=30,sd_info.LogBlockNbr,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.LogBlockNbr:",RED);
+    lcd_show_num(200,y+=30,sd_info.LogBlockSize,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.LogBlockSize:",RED);
+    lcd_show_num(200,y+=30,sd_info.RelCardAdd,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"sd_info.RelCardAdd:",RED);
+
+    lcd_show_num(200,y+=30,cardcap,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"cardcap:",RED);
+    lcd_show_string(250,y,200,40,16,"MB",RED);
+
+    lcd_show_num(200,y+=30,SD_CID.ManufacturerID,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"SD_CID.ManufacturerID", RED);
+
+    lcd_show_num(200,y+=30,SD_CID.CID_CRC,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"SD_CID.CRC", RED);
+
+    lcd_show_num(200,y+=30,SD_CID.ManufactDate,5,16,RED);
+    lcd_show_string(10,y,200,40,16,"SD_CID.ManufactDate", RED);
+}
+
+/* USER CODE BEGIN 4 */
 /* USER CODE END 4 */
 
 /**
